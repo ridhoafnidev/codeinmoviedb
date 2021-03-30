@@ -1,0 +1,26 @@
+package com.ridhoafni.codeinmoviedb
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.ridhoafni.codeinmoviedb.di.AppScope
+import com.ridhoafni.codeinmoviedb.view.detail.DetailMovieViewModel
+import com.ridhoafni.codeinmoviedb.view.movie.MovieViewModel
+import com.ridhoafni.core.domain.usecase.MovieDbUseCase
+import javax.inject.Inject
+
+@AppScope
+class ViewModelFactory @Inject constructor(private val movieDbUseCase: MovieDbUseCase) :
+    ViewModelProvider.NewInstanceFactory() {
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        when {
+            modelClass.isAssignableFrom(MovieViewModel::class.java) -> {
+                MovieViewModel(movieDbUseCase) as T
+            }
+            modelClass.isAssignableFrom(DetailMovieViewModel::class.java) -> {
+                DetailMovieViewModel(movieDbUseCase) as T
+            }
+            else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
+        }
+}
